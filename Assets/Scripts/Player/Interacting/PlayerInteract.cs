@@ -1,34 +1,43 @@
 using System.Collections;
 using System.Collections.Generic;
-using RPG.Core;
 using UnityEngine;
 
-public class PlayerInteract : MonoBehaviour, IAction
+public class PlayerInteract : MonoBehaviour
 {
-    [SerializeField]
-    float interactRange = 2f;
-    void Update()
+    [SerializeField] public GameObject ShopUI;
+    [SerializeField] public GameObject ShopIcon;
+    [field: SerializeField]public NPCInteractable sellerNpc{get;private set;}
+    private void OnTriggerEnter(Collider other) 
     {
-        Interact();
-    }
-    private void Interact()
-    {
-        if(Input.GetKeyDown(KeyCode.E))
+        if (!other.TryGetComponent<NPCInteractable>(out NPCInteractable npc))
         {
-            Collider[] colliderArray = Physics.OverlapSphere(transform.position, interactRange);
-            foreach (Collider collider in colliderArray)
-            {
-                if(collider.TryGetComponent<NPCInteractable>(out NPCInteractable npc))
-                {
-                    npc.Interact();
-                    Debug.Log(collider);
-                }
-            }
+           return;
         }
+        sellerNpc = npc;
+        ShopIcon.SetActive(true);
     }
-
+    private void OnTriggerExit(Collider other) 
+    {
+        if (!other.TryGetComponent<NPCInteractable>(out NPCInteractable npc))
+        {
+            return;
+        } 
+        RemoveNPC(npc);
+        ShopIcon.SetActive(false);
+    }
+    public bool SelectTarget()
+    {
+        if(sellerNpc == null){return false;}
+        ShopIcon?.SetActive(true);
+        return true;
+    }
     public void Cancel()
     {
-        
+        if(sellerNpc == null){return;}
+        sellerNpc = null;
+    }
+    private void RemoveNPC(NPCInteractable npcToRemove)
+    {
+        sellerNpc = null;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using RPG.Movement;
+using UnityEngine.Rendering;
 
 public class PlayerFreeLookState : PlayerBaseState
 {
@@ -17,10 +18,30 @@ public class PlayerFreeLookState : PlayerBaseState
 
     public override void Enter()
     {
+        stateMachine.InputReader.InventoryEvent += OnInventory;
+        stateMachine.InputReader.InteractEvent += OnInteract;
         stateMachine.Animator.CrossFadeInFixedTime(FreeLookBlendTree, CrossFadeDuration);
     }
-
     public override void Tick(float deltaTime)
+    {
+        stateMachine.NavMeshAgent.speed = 3.5f;
+        if(stateMachine.InputReader.IsMoving)
+        {
+            OnMove();
+        }
+    }
+
+    public override void Exit()
+    {
+        stateMachine.InputReader.InteractEvent -= OnInteract;
+        stateMachine.InputReader.InventoryEvent -= OnInventory;
+    }
+    private void OnInteract()
+    {
+        if(!stateMachine.PlayerInteract.SelectTarget()){return;}
+        stateMachine.SwitchState(new PlayerInteractState(stateMachine));
+    }
+    private void OnMove()
     {
         Ray ray;
         RaycastHit hit;
@@ -28,15 +49,11 @@ public class PlayerFreeLookState : PlayerBaseState
         bool hasHit = Physics.Raycast(ray, out hit);
         if(hasHit)
         {
-            if (Input.GetMouseButton(0))
-            {
-               Move(hit.point);
-            }
+            Move(hit.point);
         }
     }
-
-    public override void Exit()
+    private void OnInventory()
     {
-       
+        stateMachine.SwitchState(new PlayerInventoryState(stateMachine));
     }
 }
