@@ -19,7 +19,7 @@ public class PlayerStateMachine : StateMachine
     public PlayerInteract PlayerInteract{get; private set;}
 
     [field: SerializeField]
-    public Inventory Inventory {get; private set;}
+    public InventoryManager Inventory {get; private set;}
 
     [field: SerializeField]
     public NavMeshAgent NavMeshAgent {get; private set;}
