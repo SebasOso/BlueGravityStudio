@@ -23,6 +23,8 @@ public class PlayerInventoryState : PlayerBaseState
     {
         stateMachine.InputReader.IsMoving = false;
         stateMachine.NavMeshAgent.speed = 0f;
+        stateMachine.Inventory.inventoryIcon?.SetActive(false);
+        stateMachine.PlayerInteract.ShopIcon?.SetActive(false);
     }
     public override void Exit()
     {
@@ -32,5 +34,14 @@ public class PlayerInventoryState : PlayerBaseState
     {
         stateMachine.SwitchState(new PlayerFreeLookState(stateMachine));
         stateMachine.Inventory.inventoryUI.SetActive(false);
+        stateMachine.Inventory.inventoryIcon?.SetActive(true);
+        if(stateMachine.PlayerInteract.sellerNpc != null)
+        {
+            stateMachine.PlayerInteract.ShopIcon.SetActive(true);
+        }
+        else
+        {
+            stateMachine.PlayerInteract.ShopIcon.SetActive(false);
+        }
     }
 }

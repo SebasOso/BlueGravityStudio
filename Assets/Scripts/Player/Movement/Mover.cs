@@ -7,6 +7,8 @@ namespace RPG.Movement
 {
     public class Mover : MonoBehaviour
     {
+        //Logic for move the player with the cursor.
+        
         [SerializeField] private Animator anim;
         public NavMeshAgent navMesh;
         public static Mover Instance {get; private set;}

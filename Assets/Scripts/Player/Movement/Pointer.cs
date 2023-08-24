@@ -7,6 +7,9 @@ namespace RPG.Movement
 {
     public class Pointer : MonoBehaviour
     {
+        //Logic for the getter of the ray cursor in the world.
+
+        //This is past code.
         Vector3 mosWorldPos;
         public static Pointer Instance {get; private set;}
         private void Awake() 
@@ -16,8 +19,7 @@ namespace RPG.Movement
         public Ray GetRayCursor()
         {
             mosWorldPos = Mouse.current.position.ReadValue();
-            Ray ray;
-            ray = Camera.main.ScreenPointToRay(mosWorldPos);
+            Ray ray = Camera.main.ScreenPointToRay(mosWorldPos);
             return ray;
         }
     }

@@ -18,12 +18,14 @@ public class PlayerFreeLookState : PlayerBaseState
 
     public override void Enter()
     {
+        stateMachine.PlayerInteract.ShopIcon.SetActive(false);
         stateMachine.InputReader.InventoryEvent += OnInventory;
         stateMachine.InputReader.InteractEvent += OnInteract;
         stateMachine.Animator.CrossFadeInFixedTime(FreeLookBlendTree, CrossFadeDuration);
     }
     public override void Tick(float deltaTime)
     {
+        stateMachine.Inventory.inventoryIcon?.SetActive(true);
         stateMachine.NavMeshAgent.speed = 3.5f;
         if(stateMachine.InputReader.IsMoving)
         {
@@ -46,7 +48,9 @@ public class PlayerFreeLookState : PlayerBaseState
         Ray ray;
         RaycastHit hit;
         ray = Pointer.Instance.GetRayCursor();
-        bool hasHit = Physics.Raycast(ray, out hit);
+        int layerToIgnore = LayerMask.NameToLayer("RayIgnore");
+        int layerMask = ~(1 << layerToIgnore);
+        bool hasHit = Physics.Raycast(ray, out hit, float.MaxValue, layerMask);
         if(hasHit)
         {
             Move(hit.point);
@@ -55,5 +59,6 @@ public class PlayerFreeLookState : PlayerBaseState
     private void OnInventory()
     {
         stateMachine.SwitchState(new PlayerInventoryState(stateMachine));
+        stateMachine.Inventory.inventoryIcon?.SetActive(false);
     }
 }

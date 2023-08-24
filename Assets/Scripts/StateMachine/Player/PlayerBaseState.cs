@@ -5,6 +5,10 @@ using UnityEngine;
 
 public abstract class PlayerBaseState : State
 {
+    //Player base state that controls the other states because they to inherite from this class (State).
+
+    //This is past code.
+    
     protected PlayerStateMachine stateMachine;
 
     public PlayerBaseState(PlayerStateMachine stateMachine)
